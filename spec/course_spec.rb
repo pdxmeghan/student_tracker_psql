@@ -44,6 +44,13 @@ describe Course do
     expect(test_course.course_number).to eq 'CK306'
   end
 
+  it 'will delete a course from the database' do
+    test_course = Course.new({'name' => 'Cooking Shrimp', 'course_number' => 'CK306'})
+    test_course.save
+    test_course.delete
+    expect(Course.all).to eq []
+  end
+
 
 
 end

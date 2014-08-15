@@ -33,6 +33,10 @@ class Course
     @course_number = results.first['course_number']
   end
 
+  def delete
+    DB.exec("DELETE FROM courses WHERE id = #{@id};")
+  end
+
   def ==(another_course)
     @name == another_course.name && @course_number == another_course.course_number
   end
