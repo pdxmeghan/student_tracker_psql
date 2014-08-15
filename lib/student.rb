@@ -33,6 +33,11 @@ class Student
     @student_number = results.first['student_number'].to_i
   end
 
+  def delete_student
+    DB.exec("DELETE FROM students WHERE id = #{@id};")
+  end
+
+
   def ==(another_student)
     @name == another_student.name && @student_number == another_student.student_number
   end

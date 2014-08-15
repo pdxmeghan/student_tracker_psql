@@ -43,6 +43,11 @@ describe Student do
     test_student.update_number(1345)
     expect(test_student.student_number).to eq 1345
   end
-  # it 'will delete a student from the database' do
-  #   test_student = Student.new({'name' => 'Forrest Gump', 'student_number' => 1345})
+
+  it 'will delete a student from the database' do
+    test_student = Student.new({'name' => 'Forrest Gump', 'student_number' => 1345})
+    test_student.save
+    test_student.delete_student
+    expect(Student.all).to eq []
+  end
 end
