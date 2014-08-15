@@ -37,6 +37,23 @@ class Course
     DB.exec("DELETE FROM courses WHERE id = #{@id};")
   end
 
+  def add_student(test_student)
+    DB.exec("INSERT INTO courses_students (course_id, student_id) VALUES (#{@id}, #{test_student.id});")
+  end
+
+  def students
+    students = []
+    results = DB.exec("SELECT students.* FROM courses
+              JOIN courses_students on (courses.id = courses_students.course_id)
+              JOIN students on (courses_students.student_id = students.id)
+              WHERE courses.id = #{@id};")
+    binding.pry
+    results.each do |result|
+      students << Student.new(result)
+    end
+    students
+  end
+
   def ==(another_course)
     @name == another_course.name && @course_number == another_course.course_number
   end
