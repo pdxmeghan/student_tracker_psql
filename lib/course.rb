@@ -21,6 +21,18 @@ class Course
     @id = results.first['id'].to_i
   end
 
+  def update_name(new_name)
+    DB.exec("UPDATE courses SET name = '#{new_name}' WHERE id = #{@id};")
+    results = DB.exec("SELECT * FROM courses;")
+    @name = results.first['name']
+  end
+
+  def update_number(new_number)
+    DB.exec("UPDATE courses SET course_number = '#{new_number}' WHERE id = #{@id};")
+    results = DB.exec("SELECT * FROM courses;")
+    @course_number = results.first['course_number']
+  end
+
   def ==(another_course)
     @name == another_course.name && @course_number == another_course.course_number
   end

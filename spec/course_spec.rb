@@ -30,6 +30,20 @@ describe Course do
     expect(test_course1).to eq test_course
   end
 
+  it 'will update a courses name' do
+    test_course = Course.new({'name' => 'Cooking Strimp', 'course_number' => 'CK306'})
+    test_course.save
+    test_course.update_name('Cooking Shrimp')
+    expect(test_course.name).to eq 'Cooking Shrimp'
+  end
+
+  it 'will update a courses course number' do
+    test_course = Course.new({'name' => 'Cooking Shrimp', 'course_number' => 'CK305'})
+    test_course.save
+    test_course.update_number('CK306')
+    expect(test_course.course_number).to eq 'CK306'
+  end
+
 
 
 end
