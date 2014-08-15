@@ -37,6 +37,18 @@ class Student
     DB.exec("DELETE FROM students WHERE id = #{@id};")
   end
 
+  def list_courses
+    courses = []
+    results = DB.exec("SELECT courses.* FROM students
+              JOIN courses_students on (students.id = courses_students.student_id)
+              JOIN courses on (courses_students.course_id = courses.id)
+              WHERE students.id = #{@id};")
+    binding.pry
+    results.each do |result|
+      courses << Course.new(result)
+    end
+    courses
+  end
 
   def ==(another_student)
     @name == another_student.name && @student_number == another_student.student_number

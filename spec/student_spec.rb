@@ -50,4 +50,13 @@ describe Student do
     test_student.delete_student
     expect(Student.all).to eq []
   end
+
+  it 'will list all courses a student is enrolled in' do
+    test_student = Student.new({'name' => 'Jenny', 'student_number' => 3487})
+    test_student.save
+    test_course = Course.new({'name' => 'Underwater Basketweaving', 'course_number' => 'AC489'})
+    test_course.save
+    test_course.add_student(test_student)
+    expect(test_student.list_courses).to eq [test_course]
+  end
 end

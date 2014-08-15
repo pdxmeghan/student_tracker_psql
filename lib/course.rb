@@ -47,7 +47,6 @@ class Course
               JOIN courses_students on (courses.id = courses_students.course_id)
               JOIN students on (courses_students.student_id = students.id)
               WHERE courses.id = #{@id};")
-    binding.pry
     results.each do |result|
       students << Student.new(result)
     end
