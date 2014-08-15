@@ -29,4 +29,20 @@ describe Student do
     test_student2.save
     expect(test_student1).to eq test_student2
   end
+
+  it 'will update a students name' do
+    test_student = Student.new({'name' => 'Forest Gump', 'student_number' => 1345})
+    test_student.save
+    test_student.update_name('Forrest Gump')
+    expect(test_student.name).to eq 'Forrest Gump'
+  end
+
+  it 'will update a students student number' do
+    test_student = Student.new({'name' => 'Forerst Gump', 'student_number' => 1344})
+    test_student.save
+    test_student.update_number(1345)
+    expect(test_student.student_number).to eq 1345
+  end
+  # it 'will delete a student from the database' do
+  #   test_student = Student.new({'name' => 'Forrest Gump', 'student_number' => 1345})
 end

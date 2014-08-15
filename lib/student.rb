@@ -21,6 +21,18 @@ class Student
     @id = results.first['id'].to_i
   end
 
+  def update_name(new_name)
+    DB.exec("UPDATE students SET name = '#{new_name}' WHERE id = #{@id};")
+    results = DB.exec("SELECT * from students WHERE id = #{@id};")
+    @name = results.first['name']
+  end
+
+  def update_number(new_number)
+    DB.exec("UPDATE students SET student_number = #{new_number} WHERE id = #{@id};")
+    results = DB.exec("SELECT * FROM students WHERE id = #{@id};")
+    @student_number = results.first['student_number'].to_i
+  end
+
   def ==(another_student)
     @name == another_student.name && @student_number == another_student.student_number
   end
