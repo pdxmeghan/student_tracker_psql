@@ -13,6 +13,8 @@ CREATE TABLE students (id serial PRIMARY KEY, name varchar, student_number numer
 CREATE TABLE courses (id serial PRIMARY KEY, name varchar, course_number varchar)
 CREATE TABLE courses_students (id serial PRIMARY KEY, course_id int, student_id int)
 
+You will also need to use the pg gem.
+
 #####Known Issues:
 ######You can only add students to a course. You cannot add a course to a student.
 You must enter the full name of a student or course NOT including the student or course number in order to select either one.
