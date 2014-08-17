@@ -41,6 +41,10 @@ class Course
     DB.exec("INSERT INTO courses_students (course_id, student_id) VALUES (#{@id}, #{test_student.id});")
   end
 
+  def delete_student(test_student)
+    DB.exec("DELETE FROM courses_students WHERE student_id = #{test_student.id};")
+  end
+
   def students
     students = []
     results = DB.exec("SELECT students.* FROM courses

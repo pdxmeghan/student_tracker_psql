@@ -98,6 +98,9 @@ def view_student
     number = student.student_number
     if name == student_choice
       @selected_student = student
+    else
+      puts "\nPlease input a valid student name"
+      main_menu
     end
   end
   puts "\nYou have chosen [#{@selected_student.name} -- #{@selected_student.student_number}]\n"
@@ -110,6 +113,7 @@ def course_menu
     puts "Press 'u' to update this course's information"
     puts "Press 'd' to delete this course"
     puts "Press 'l' to list out all students currently enrolled in this course."
+    puts "Press 'ds' to delete a student from this course"
     puts "Press 'm' to go to the main menu"
     puts "Press 'x' to exit the program"
     menu_choice = gets.chomp
@@ -121,6 +125,8 @@ def course_menu
       delete_course
     elsif menu_choice == 'l'
       list_students_in_course
+    elsif menu_choice == 'ds'
+      delete_student_from_course
     elsif menu_choice == 'm'
       main_menu
     elsif menu_choice == 'x'
@@ -142,9 +148,36 @@ def add_student_to_course
     if student_choice == student.name
       @name = student.name
       @selected_course.add_student(student)
+    else
+      puts "\nPlease input a valid student name"
+      main_menu
     end
   end
   puts "\nThanks! [#{@name}] has been added to [#{@selected_course.name} -- #{@selected_course.course_number}].\n"
+end
+
+def delete_student_from_course
+  if @selected_course.students.empty?
+    puts "\nThere are no students enrolled in this course\n"
+    main_menu
+  else
+    @selected_course.students.each do |student|
+      name = student.name
+      number  = student.student_number
+      puts "[#{name} -- #{number}"
+    end
+  end
+  puts "\nEnter the name of the student you would like to delete from this course\n"
+  student_choice = gets.chomp
+  @selected_course.students.each do |student|
+    if student_choice == student.name
+      @selected_course.delete_student(student)
+    else
+      puts "\nPlease input a valid student name"
+      course_menu
+    end
+  end
+  puts "Thanks! This student has been deleted from [#{@selected_course.name} -- #{@selected_course.course_number}].\n"
 end
 
 def update_course
@@ -175,6 +208,7 @@ end
 def list_students_in_course
   if @selected_course.students.empty?
     puts "\nThere are no students in this course. You can add students here:"
+    course_menu
   else
     puts "\nAll students currently enrolled in #{@selected_course.name}:"
     @selected_course.students.each do |student|

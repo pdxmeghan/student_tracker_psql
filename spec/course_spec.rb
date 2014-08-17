@@ -59,4 +59,14 @@ describe Course do
     test_course.add_student(test_student)
     expect(test_course.students).to eq [test_student]
   end
+
+  it 'will delete a student from the course' do
+    test_course = Course.new({'name' => 'Cooking Shrimp', 'course_number' => 'CK306'})
+    test_course.save
+    test_student = Student.new({'name' => 'Forrest Gump', 'student_number' => 1345})
+    test_student.save
+    test_course.add_student(test_student)
+    test_course.delete_student(test_student)
+    expect(test_course.students).to eq []
+  end
 end
