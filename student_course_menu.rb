@@ -59,7 +59,7 @@ def view_course
     Course.all.each do |course|
       name = course.name
       number = course.course_number
-      puts "#{name} - #{number}"
+      puts "[#{name} - #{number}]"
     end
   end
   puts "\nPlease enter the name of the course you would like to view\n"
@@ -69,25 +69,27 @@ def view_course
     number = course.course_number
     if name == course_choice
       @selected_course = course
-      puts "\nYou have chosen #{@selected_course.name} -- #{@selected_course.course_number}\n"
+      puts "\nYou have chosen [#{@selected_course.name} -- #{@selected_course.course_number}]\n"
+      break
     else
       puts "\nPlease enter a valid option.\n"
-      view_course
+      main_menu
     end
   end
-  # puts "\nAll students currently enrolled in #{@selected_course.name}:"
-  # @selected_course.students.each do |student|
-  #   puts "\n{student.name} -- #{student.student_number}"
-  # end
   course_menu
 end
 
 def view_student
   puts "\nAll students:"
-  Student.all.each do |student|
-    name = student.name
-    number = student.student_number
-    puts "#{name} -- #{number}"
+  if Student.all.empty?
+    puts "Sorry! There are no students. Please add students: \n"
+    main_menu
+  else
+    Student.all.each do |student|
+      name = student.name
+      number = student.student_number
+      puts "[#{name} -- #{number}]"
+    end
   end
   puts "\nPlease enter the name of the student you would like to view"
   student_choice = gets.chomp
@@ -98,11 +100,7 @@ def view_student
       @selected_student = student
     end
   end
-  puts "\nYou have chosen #{@selected_student.name} -- #{@selected_student.student_number}\n"
-  # puts "All classes #{@selected_student.name} is currently enrolled in:"
-  # @selected_student.list_courses.each do |course|
-  #   puts "\n#{course.name} -- #{course.course_number}"
-  # end
+  puts "\nYou have chosen [#{@selected_student.name} -- #{@selected_student.student_number}]\n"
   student_menu
 end
 
@@ -136,7 +134,7 @@ def add_student_to_course
   Student.all.each do |student|
     name = student.name
     number = student.student_number
-    puts "\n#{name} -- #{number}"
+    puts "\n[#{name} -- #{number}]"
   end
   puts "Input the name of the student you would like to add to the course"
   student_choice = gets.chomp
@@ -146,7 +144,7 @@ def add_student_to_course
       @selected_course.add_student(student)
     end
   end
-  puts "\nThanks! #{@name} has been added to #{@selected_course.name} -- #{@selected_course.course_number}.\n"
+  puts "\nThanks! [#{@name}] has been added to [#{@selected_course.name} -- #{@selected_course.course_number}].\n"
 end
 
 def update_course
@@ -156,19 +154,18 @@ def update_course
   new_number = gets.chomp
   name = @selected_course.update_name(new_name)
   course_number = @selected_course.update_number(new_number)
-  puts "\nThanks! This entry is now: #{name} -- #{course_number}\n"
+  puts "\nThanks! This entry is now: [#{name} -- #{course_number}]\n"
 end
 
 def delete_course
   puts "Would you like to permanently delete #{@selected_course.name} -- #{@selected_course.course_number}?"
   puts "Enter 'y' for Yes or 'n' for No"
   menu_choice = gets.chomp
-  if menu_choice == 'y' || 'Y'
+  if menu_choice == 'y' || menu_choice == 'Y'
     @selected_course.delete
-    puts "#{@selected_course.name} -- #{@selected_course.course_number} has been deleted.\n"
-  elsif menu_choice == 'n' || 'N'
-    puts "\n#{@selected_course.name} -- #{@selected_course.course_number} has not been deleted\n"
-    main_menu
+    puts "[#{@selected_course.name} -- #{@selected_course.course_number}] has been deleted.\n"
+  elsif menu_choice == 'n' || menu_choice == 'N'
+    puts "\n[#{@selected_course.name} -- #{@selected_course.course_number}] has not been deleted\n"
   else
     puts "Please enter a valid option."
     course_menu
@@ -181,7 +178,70 @@ def list_students_in_course
   else
     puts "\nAll students currently enrolled in #{@selected_course.name}:"
     @selected_course.students.each do |student|
-      puts "\n#{student.name} -- #{student.student_number}\n"
+      puts "\n[#{student.name} -- #{student.student_number}]\n"
+    end
+  end
+end
+
+def student_menu
+  loop do
+    puts "\nPress 'u' to update this student's record"
+    puts "Press 'd' to delete this student's record"
+    puts "Press 'l' to list out of this student's courses"
+    puts "Press 'm' to go to the main menu"
+    puts "Press 'x' to exit the program"
+    menu_choice = gets.chomp
+    if menu_choice == 'u'
+      update_student
+    elsif menu_choice == 'd'
+      delete_student
+    elsif menu_choice == 'l'
+      list_courses_for_student
+    elsif menu_choice == 'm'
+      main_menu
+    elsif menu_choice == 'x'
+      puts "Goodbye!"
+      exit
+    else
+      puts "Please input valid option"
+    end
+  end
+end
+
+def update_student
+  puts "\nWhat is student's new name?"
+  name_choice = gets.chomp
+  puts "\nWhat is the student's new student number?"
+  number_choice = gets.chomp
+  @selected_student.update_name(name_choice)
+  @selected_student.update_number(number_choice)
+  puts "\nThanks! This student is now recorded as [#{name_choice} -- #{number_choice}]\n"
+end
+
+def delete_student
+  puts "\nAre you sure you want to permanently delete [#{@selected_student.name} -- #{@selected_student.student_number}]?"
+  puts "\nPress 'y' for Yes or 'n' for No."
+  menu_choice = gets.chomp
+  if menu_choice == 'y' || menu_choice ==  'Y'
+    @selected_student.delete_student
+    puts "[#{@selected_student.name} -- #{@selected_student.student_number}] has been deleted.\n"
+  elsif menu_choice == 'n' || menu_choice == 'N'
+    puts "\n[#{@selected_student.name} -- #{@selected_student.student_number}] has not been deleted\n"
+  else
+    puts "Please enter a valid option."
+    course_menu
+  end
+end
+
+def list_courses_for_student
+  if @selected_student.list_courses.empty?
+    puts "\nThis student is not enrolled in any courses.\n"
+  else
+    puts "\n[#{@selected_student.name} -- #{@selected_student.student_number}] is currently enrolled in these courses:\n"
+    @selected_student.list_courses.each do |course|
+      course_name = course.name
+      course_number = course.course_number
+      puts "[#{course_name} -- #{course_number}]"
     end
   end
 end

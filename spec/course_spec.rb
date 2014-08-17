@@ -59,5 +59,4 @@ describe Course do
     test_course.add_student(test_student)
     expect(test_course.students).to eq [test_student]
   end
-
 end
