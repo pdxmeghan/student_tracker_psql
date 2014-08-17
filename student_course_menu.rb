@@ -7,8 +7,8 @@ DB = PG.connect({:dbname => 'student_tracker'})
 
 def main_menu
   loop do
-    puts "Press 'ac' to add a course"
-    puts "Press 'as' to add a student"
+    puts "\nPress 'ac' to add a course to the database"
+    puts "Press 'as' to add a student to the database"
     puts "Press 'vc' to view a course record"
     puts "Press 'vs' to view a student record"
     puts "Press 'x' to exit the program"
@@ -52,21 +52,29 @@ end
 
 def view_course
   puts "\nAll courses:"
-  Course.all.each do |course|
-    name = course.name
-    number = course.course_number
-    puts "#{name} - #{number}"
+  if Course.all.empty?
+    puts "Sorry! There are no courses. Please add courses.\n"
+    main_menu
+  else
+    Course.all.each do |course|
+      name = course.name
+      number = course.course_number
+      puts "#{name} - #{number}"
+    end
   end
-  puts "\nPlease enter the name of the course you would like to view"
+  puts "\nPlease enter the name of the course you would like to view\n"
   course_choice = gets.chomp
   Course.all.each do |course|
     name = course.name
     number = course.course_number
     if name == course_choice
       @selected_course = course
+      puts "\nYou have chosen #{@selected_course.name} -- #{@selected_course.course_number}\n"
+    else
+      puts "\nPlease enter a valid option.\n"
+      view_course
     end
   end
-  puts "You have chosen #{@selected_course.name} -- #{@selected_course.course_number}"
   # puts "\nAll students currently enrolled in #{@selected_course.name}:"
   # @selected_course.students.each do |student|
   #   puts "\n{student.name} -- #{student.student_number}"
@@ -100,7 +108,7 @@ end
 
 def course_menu
   loop do
-    puts "Press 'as' to add a student to this course"
+    puts "\nPress 'as' to add a student to this course"
     puts "Press 'u' to update this course's information"
     puts "Press 'd' to delete this course"
     puts "Press 'l' to list out all students currently enrolled in this course."
@@ -146,15 +154,36 @@ def update_course
   new_name = gets.chomp
   puts "\nWhat is the new course number?"
   new_number = gets.chomp
-  @selected_course.update_name(new_name)
-  @selected_course.update_number(new_number)
-  puts "\nThanks! This entry is now: #{@selected_course.name} -##{#### NOT WORKING}}- #{@selected_course.course_number}\n"
+  name = @selected_course.update_name(new_name)
+  course_number = @selected_course.update_number(new_number)
+  puts "\nThanks! This entry is now: #{name} -- #{course_number}\n"
+end
+
+def delete_course
+  puts "Would you like to permanently delete #{@selected_course.name} -- #{@selected_course.course_number}?"
+  puts "Enter 'y' for Yes or 'n' for No"
+  menu_choice = gets.chomp
+  if menu_choice == 'y' || 'Y'
+    @selected_course.delete
+    puts "#{@selected_course.name} -- #{@selected_course.course_number} has been deleted.\n"
+  elsif menu_choice == 'n' || 'N'
+    puts "\n#{@selected_course.name} -- #{@selected_course.course_number} has not been deleted\n"
+    main_menu
+  else
+    puts "Please enter a valid option."
+    course_menu
+  end
 end
 
 def list_students_in_course
-  puts "\nAll students currently enrolled in #{@selected_course.name}:"
-  @selected_course.students.each do |student|
-    puts "\n#{student.name} -- #{student.student_number}\n"
+  if @selected_course.students.empty?
+    puts "\nThere are no students in this course. You can add students here:"
+  else
+    puts "\nAll students currently enrolled in #{@selected_course.name}:"
+    @selected_course.students.each do |student|
+      puts "\n#{student.name} -- #{student.student_number}\n"
+    end
   end
 end
+
 main_menu
